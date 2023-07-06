@@ -125,8 +125,8 @@ setDefaultConsentState({
   'wait_for_update': 500
 });
 
-//let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-let scriptUrl = 'https://app.secureprivacy.ai/script/' + id + '.js';
+let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+//let scriptUrl = 'https://app.secureprivacy.ai/script/' + id + '.js';
 
 if (queryPermission('inject_script', scriptUrl)) {
   injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
