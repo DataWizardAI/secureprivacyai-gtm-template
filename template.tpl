@@ -122,7 +122,7 @@ setDefaultConsentState({
   'functionality_storage': data.preferencesDefaultState,
   'personalization_storage': data.preferencesDefaultState,
   'security_storage': 'granted',
-  //'wait_for_update': 500
+  'wait_for_update': 500
 });
 
 //let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
