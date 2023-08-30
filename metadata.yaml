@@ -1,7 +1,9 @@
 homepage: "https://secureprivacy.ai/"
 documentation: "https://support.secureprivacy.ai/support/solutions/articles/80000874877-how-to-install-secure-privacy-with-google-tag-manager-gtm-"
 versions:
+  # Latest version
   - sha: 159fc61af970d5639ebc88b303053f5c3d0d4b75
+  # Older versions
     chageNotes: encodeUriComponent fixed
   - sha: df902ef537a4534e7444ad77b17a797013c6c6ec
     chageNotes: wait parameter added
