@@ -383,6 +383,14 @@ const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const id = data.id;
 
+let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+
+if (queryPermission('inject_script', scriptUrl)) {
+  injectScript(scriptUrl,  log('secureprivacy.ai injected'), data.gtmOnFailure);
+} else {
+  data.gtmOnFailure();
+}
+
 // Set advanced settings
 gtagSet({
   url_passthrough: data.url_passthrough || false,
@@ -462,16 +470,9 @@ if (data.command === 'update') {
   }
 }
 
-let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
 // Call data.gtmOnSuccess when the tag is finished.
-// data.gtmOnSuccess();
-
-if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
-} else {
-  data.gtmOnFailure();
-}
+data.gtmOnSuccess();
 
 ___WEB_PERMISSIONS___
 
