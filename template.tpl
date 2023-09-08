@@ -383,96 +383,99 @@ const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const id = data.id;
 
-let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-
-if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl,  log('secureprivacy.ai injected'), data.gtmOnFailure);
-} else {
-  data.gtmOnFailure();
-}
-
-// Set advanced settings
-gtagSet({
-  url_passthrough: data.url_passthrough || false,
-  ads_data_redaction: data.ads_data_redaction || false
-});
-
-// dataLayer.push helper
-const dlPush = (isDefault, ads, analytics, personalization, functionality, security, region) => {
-  dataLayerPush({
-    event: 'gtm_consent_' + (isDefault ? 'default' : 'update'),
-    ad_storage: ads,
-    analytics_storage: analytics,
-    personalization_storage: personalization,
-    functionality_storage: functionality,
-    security_storage: security,
-    consent_region: region
+function after_inject() {
+  // Set advanced settings
+  gtagSet({
+    url_passthrough: data.url_passthrough || false,
+    ads_data_redaction: data.ads_data_redaction || false
   });
-};
 
-// Process default consent state
-if (data.command === 'default') {
-  data.settingsTable.forEach(setting => {
-    const settingObject = {
-      ad_storage: setting.ad_storage,
-      analytics_storage: setting.analytics_storage,
-      personalization_storage: setting.personalization_storage,
-      functionality_storage: setting.functionality_storage,
-      security_storage: setting.security_storage,
-      wait_for_update: setting.wait_for_update
-    };
-    if (setting.regions !== 'all') {
-      settingObject.region = setting.regions.split(',').map(r => r.trim());
-    }
-    setDefaultConsentState(settingObject);
-    if (data.sendGtag) gtag('consent', 'default', settingObject);
-    if (data.sendDataLayer) {
-      dlPush(
-        true, 
-        setting.ad_storage, 
-        setting.analytics_storage, 
-        setting.personalization_storage, 
-        setting.functionality_storage, 
-        setting.security_storage, 
-        settingObject.region
-        );
-    }
-  });
-}
+  // dataLayer.push helper
+  const dlPush = (isDefault, ads, analytics, personalization, functionality, security, region) => {
+    dataLayerPush({
+      event: 'gtm_consent_' + (isDefault ? 'default' : 'update'),
+      ad_storage: ads,
+      analytics_storage: analytics,
+      personalization_storage: personalization,
+      functionality_storage: functionality,
+      security_storage: security,
+      consent_region: region
+    });
+  };
 
-// Process updated consent state
-if (data.command === 'update') {
-  if (data.sendGtag) {
-    gtag('consent', 'update', {
+  // Process default consent state
+  if (data.command === 'default') {
+    data.settingsTable.forEach(setting => {
+      const settingObject = {
+        ad_storage: setting.ad_storage,
+        analytics_storage: setting.analytics_storage,
+        personalization_storage: setting.personalization_storage,
+        functionality_storage: setting.functionality_storage,
+        security_storage: setting.security_storage,
+        wait_for_update: setting.wait_for_update
+      };
+      if (setting.regions !== 'all') {
+        settingObject.region = setting.regions.split(',').map(r => r.trim());
+      }
+      setDefaultConsentState(settingObject);
+      if (data.sendGtag) gtag('consent', 'default', settingObject);
+      if (data.sendDataLayer) {
+        dlPush(
+          true, 
+          setting.ad_storage, 
+          setting.analytics_storage, 
+          setting.personalization_storage, 
+          setting.functionality_storage, 
+          setting.security_storage, 
+          settingObject.region
+          );
+      }
+    });
+  }
+
+  // Process updated consent state
+  if (data.command === 'update') {
+    if (data.sendGtag) {
+      gtag('consent', 'update', {
+        ad_storage: data.update_ad_storage,
+        analytics_storage: data.update_analytics_storage,
+        personalization_storage: data.update_personalization_storage,
+        functionality_storage: data.update_functionality_storage,
+        security_storage: data.update_security_storage
+      });
+    }
+    updateConsentState({
       ad_storage: data.update_ad_storage,
       analytics_storage: data.update_analytics_storage,
       personalization_storage: data.update_personalization_storage,
       functionality_storage: data.update_functionality_storage,
       security_storage: data.update_security_storage
     });
+    if (data.sendDataLayer) {
+      dlPush(
+        false, 
+        data.update_ad_storage, 
+        data.update_analytics_storage, 
+        data.update_personalization_storage, 
+        data.update_functionality_storage, 
+        data.update_security_storage
+        );
+    }
   }
-  updateConsentState({
-    ad_storage: data.update_ad_storage,
-    analytics_storage: data.update_analytics_storage,
-    personalization_storage: data.update_personalization_storage,
-    functionality_storage: data.update_functionality_storage,
-    security_storage: data.update_security_storage
-  });
-  if (data.sendDataLayer) {
-    dlPush(
-      false, 
-      data.update_ad_storage, 
-      data.update_analytics_storage, 
-      data.update_personalization_storage, 
-      data.update_functionality_storage, 
-      data.update_security_storage
-      );
-  }
+
+  // Call data.gtmOnSuccess when the tag is finished.
+  log('secureprivacy.ai injected');
+  data.gtmOnSuccess();
+  return ;
 }
 
+let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
-// Call data.gtmOnSuccess when the tag is finished.
-data.gtmOnSuccess();
+if (queryPermission('inject_script', scriptUrl)) {
+  injectScript(scriptUrl, after_inject, data.gtmOnFailure);
+} else {
+  data.gtmOnFailure();
+}
 
 ___WEB_PERMISSIONS___
 
