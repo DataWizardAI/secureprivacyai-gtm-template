@@ -182,7 +182,7 @@ ___TEMPLATE_PARAMETERS___
               "displayName": "Wait for Update",
               "simpleValueType": true,
               "valueUnit": "milliseconds",
-              "defaultValue": 5000,
+              "defaultValue": 500,
               "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
             },
             "isUnique": false
