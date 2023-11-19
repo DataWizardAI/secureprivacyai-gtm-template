@@ -203,27 +203,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 const dataLayerPush = require('createQueue')('dataLayer');
 const log = require('logToConsole');
 const setDefaultConsentState = require('setDefaultConsentState');
-const setCookie = require('setCookie');
 
 const injectScript = require('injectScript');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const id = data.id;
-
-
-function create_cookie(cookieValue) {
-  const name = "spConsent";
-  const value = cookieValue;
-  const options = {
-    domain: '.',
-    path: '/',
-    secure: false,
-    sameSite: true,
-    "max-age": 2592000 // One month in seconds
-  };
-  setCookie(name, value, options, false);
-}
-
 
 function after_inject() {
 
@@ -249,7 +233,6 @@ function after_inject() {
     settings: data.settingsTable
   });
 
-  create_cookie(data.settingsTable);
   // Call data.gtmOnSuccess when the tag is finished.
   log('secureprivacy.ai injected');
   data.gtmOnSuccess();
