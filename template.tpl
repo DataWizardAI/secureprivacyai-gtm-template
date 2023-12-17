@@ -40,28 +40,9 @@ ___TEMPLATE_PARAMETERS___
     "simpleValueType": true
   },
   {
-    "type": "SELECT",
-    "name": "command",
-    "displayName": "Consent Command",
-    "selectItems": [
-      {
-        "value": "default",
-        "displayValue": "Default"
-      },
-      {
-        "value": "update",
-        "displayValue": "Update"
-      }
-    ],
-    "simpleValueType": true,
-    "help": "\u003cstrong\u003eDefault\u003c/strong\u003e means that you establish consent settings the site falls back on until such a time that the Update command is executed. \u003cstrong\u003eUpdate\u003c/strong\u003e is what you\u0027d use once you\u0027ve retrieved a consent status from the user.",
-    "defaultValue": "default",
-    "alwaysInSummary": true
-  },
-  {
     "type": "GROUP",
     "name": "defaultSettings",
-    "displayName": "Default Consent Settings",
+    "displayName": "Consent Settings",
     "groupStyle": "NO_ZIPPY",
     "subParams": [
       {
@@ -212,157 +193,6 @@ ___TEMPLATE_PARAMETERS___
           }
         ]
       }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "command",
-        "paramValue": "default",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
-    "name": "updateSettings",
-    "displayName": "Update Consent Settings",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
-      {
-        "type": "SELECT",
-        "name": "update_ad_storage",
-        "displayName": "Advertising",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "granted",
-            "displayValue": "granted"
-          },
-          {
-            "value": "denied",
-            "displayValue": "denied"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "granted",
-        "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e."
-      },
-      {
-        "type": "SELECT",
-        "name": "update_analytics_storage",
-        "displayName": "Analytics",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "granted",
-            "displayValue": "granted"
-          },
-          {
-            "value": "denied",
-            "displayValue": "denied"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "granted",
-        "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google Analytics tags will not read or write analytics cookies, and data collected to Google Analytics will not utilize persistent cookie identifiers (the identifiers are reset with every page load). \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e."
-      },
-      {
-        "type": "SELECT",
-        "name": "update_personalization_storage",
-        "displayName": "Personalization",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "granted",
-            "displayValue": "granted"
-          },
-          {
-            "value": "denied",
-            "displayValue": "denied"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "granted"
-      },
-      {
-        "type": "SELECT",
-        "name": "update_functionality_storage",
-        "displayName": "Functionality",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "granted",
-            "displayValue": "granted"
-          },
-          {
-            "value": "denied",
-            "displayValue": "denied"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "granted"
-      },
-      {
-        "type": "SELECT",
-        "name": "update_security_storage",
-        "displayName": "Security",
-        "macrosInSelect": true,
-        "selectItems": [
-          {
-            "value": "granted",
-            "displayValue": "granted"
-          },
-          {
-            "value": "denied",
-            "displayValue": "denied"
-          }
-        ],
-        "simpleValueType": true,
-        "defaultValue": "granted"
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "command",
-        "paramValue": "update",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
-    "name": "other",
-    "displayName": "Other Settings",
-    "groupStyle": "ZIPPY_OPEN",
-    "subParams": [
-      {
-        "type": "CHECKBOX",
-        "name": "url_passthrough",
-        "checkboxText": "Pass Ad Click Information Through URLs",
-        "simpleValueType": true,
-        "help": "Check this if you want internal links to pass advertising identifiers (\u003cstrong\u003egclid\u003c/strong\u003e, \u003cstrong\u003edclid\u003c/strong\u003e, \u003cstrong\u003egclsrc\u003c/strong\u003e, \u003cstrong\u003e_gl\u003c/strong\u003e) in the link URL while waiting for consent to be granted."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "ads_data_redaction",
-        "checkboxText": "Redact Ads Data",
-        "simpleValueType": true,
-        "help": "If this is checked \u003cstrong\u003eand\u003c/strong\u003e Advertising consent status is \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags will drop all advertising identifiers from the requests, and traffic will be routed through cookieless domains."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "sendDataLayer",
-        "checkboxText": "Push dataLayer Event",
-        "simpleValueType": true,
-        "help": "When consent is set to \"default\", a dataLayer event with \u003cstrong\u003eevent: \u0027gtm_consent_default\u0027\u003c/strong\u003e is sent, together with consent state for both \u003cstrong\u003ead_storage\u003c/strong\u003e and \u003cstrong\u003eanalytics_storage\u003c/strong\u003e. When an \"update\" is fired, a dataLayer event with \u003cstrong\u003eevent: \u0027gtm_consent_update\u0027\u003c/strong\u003e is pushed together with details about the updated consent state."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "sendGtag",
-        "checkboxText": "Fire the Global Site Tag (gtag) command",
-        "simpleValueType": true,
-        "help": "Only check this if you also want to generate a gtag() command for consent. This should be unnecessary, but the option is left here for compatibility.",
-        "defaultValue": false
-      }
     ]
   }
 ]
@@ -371,12 +201,8 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const dataLayerPush = require('createQueue')('dataLayer');
-const gtag = require('createArgumentsQueue')('gtag', 'dataLayer');
-const gtagSet = require('gtagSet');
 const log = require('logToConsole');
-const makeTableMap = require('makeTableMap');
 const setDefaultConsentState = require('setDefaultConsentState');
-const updateConsentState = require('updateConsentState');
 
 const injectScript = require('injectScript');
 const encodeUriComponent = require('encodeUriComponent');
@@ -384,84 +210,28 @@ const queryPermission = require('queryPermission');
 const id = data.id;
 
 function after_inject() {
-  // Set advanced settings
-  gtagSet({
-    url_passthrough: data.url_passthrough || false,
-    ads_data_redaction: data.ads_data_redaction || false
-  });
-
-  // dataLayer.push helper
-  const dlPush = (isDefault, ads, analytics, personalization, functionality, security, region) => {
-    dataLayerPush({
-      event: 'gtm_consent_' + (isDefault ? 'default' : 'update'),
-      ad_storage: ads,
-      analytics_storage: analytics,
-      personalization_storage: personalization,
-      functionality_storage: functionality,
-      security_storage: security,
-      consent_region: region
-    });
-  };
 
   // Process default consent state
-  if (data.command === 'default') {
-    data.settingsTable.forEach(setting => {
-      const settingObject = {
-        ad_storage: setting.ad_storage,
-        analytics_storage: setting.analytics_storage,
-        personalization_storage: setting.personalization_storage,
-        functionality_storage: setting.functionality_storage,
-        security_storage: setting.security_storage,
-        wait_for_update: setting.wait_for_update
-      };
-      if (setting.regions !== 'all') {
-        settingObject.region = setting.regions.split(',').map(r => r.trim());
-      }
-      setDefaultConsentState(settingObject);
-      if (data.sendGtag) gtag('consent', 'default', settingObject);
-      if (data.sendDataLayer) {
-        dlPush(
-          true, 
-          setting.ad_storage, 
-          setting.analytics_storage, 
-          setting.personalization_storage, 
-          setting.functionality_storage, 
-          setting.security_storage, 
-          settingObject.region
-          );
-      }
-    });
-  }
+  data.settingsTable.forEach(setting => {
+    const settingObject = {
+      ad_storage: setting.ad_storage,
+      analytics_storage: setting.analytics_storage,
+      personalization_storage: setting.personalization_storage,
+      functionality_storage: setting.functionality_storage,
+      security_storage: setting.security_storage,
+      wait_for_update: setting.wait_for_update
+    };
+    if (setting.regions !== 'all') {
+      settingObject.region = setting.regions.split(',').map(r => r.trim());
+    }
+    setDefaultConsentState(settingObject);
+  });
 
-  // Process updated consent state
-  if (data.command === 'update') {
-    if (data.sendGtag) {
-      gtag('consent', 'update', {
-        ad_storage: data.update_ad_storage,
-        analytics_storage: data.update_analytics_storage,
-        personalization_storage: data.update_personalization_storage,
-        functionality_storage: data.update_functionality_storage,
-        security_storage: data.update_security_storage
-      });
-    }
-    updateConsentState({
-      ad_storage: data.update_ad_storage,
-      analytics_storage: data.update_analytics_storage,
-      personalization_storage: data.update_personalization_storage,
-      functionality_storage: data.update_functionality_storage,
-      security_storage: data.update_security_storage
-    });
-    if (data.sendDataLayer) {
-      dlPush(
-        false, 
-        data.update_ad_storage, 
-        data.update_analytics_storage, 
-        data.update_personalization_storage, 
-        data.update_functionality_storage, 
-        data.update_security_storage
-        );
-    }
-  }
+  // push settings to the data layer
+  dataLayerPush({
+    event: 'gtm_default_consent_settings',
+    settings: data.settingsTable
+  });
 
   // Call data.gtmOnSuccess when the tag is finished.
   log('secureprivacy.ai injected');
@@ -841,25 +611,7 @@ ___WEB_PERMISSIONS___
       "key": {
         "publicId": "write_data_layer",
         "versionId": "1"
-      },
-      "param": [
-        {
-          "key": "keyPatterns",
-          "value": {
-            "type": 2,
-            "listItem": [
-              {
-                "type": 1,
-                "string": "url_passthrough"
-              },
-              {
-                "type": 1,
-                "string": "ads_data_redaction"
-              }
-            ]
-          }
-        }
-      ]
+      }
     },
     "clientAnnotations": {
       "isEditedByUser": true
@@ -872,23 +624,9 @@ ___WEB_PERMISSIONS___
 ___TESTS___
 
 scenarios:
-- name: gtag command created
-  code: |-
-    mock('createArgumentsQueue', (cmd, arr) => {
-      assertThat(cmd).isEqualTo('gtag');
-      assertThat(arr).isEqualTo('dataLayer');
-      return () => {};
-    });
-
-    // Call runCode to run the template's code.
-    runCode(mockData);
-
-    // Verify that the tag finished successfully.
-    assertApi('gtmOnSuccess').wasCalled();
 - name: default settings sent
   code: |-
     let index = 1;
-    mockData.sendGtag = true;
     mock('createArgumentsQueue', () => {
       return function() {
         if (arguments[0] === 'consent' && index === 1) {
@@ -936,52 +674,11 @@ scenarios:
       wait_for_update: 1000
     });
     assertApi('gtmOnSuccess').wasCalled();
-- name: updated settings sent
-  code: |-
-    mockData.command = 'update';
-
-    mock('createArgumentsQueue', () => {
-      return function() {
-        if (arguments[0] === 'consent') {
-          assertThat(arguments[2]).isEqualTo({
-            ad_storage: 'denied',
-            analytics_storage: 'granted',
-            personalization_storage: 'granted',
-            functionality_storage: 'granted',
-            security_storage: 'granted'
-          });
-        }
-      };
-    });
-    // Call runCode to run the template's code.
-    runCode(mockData);
-
-    // Verify that the tag finished successfully.
-    assertApi('updateConsentState').wasCalledWith({
-      ad_storage: 'denied',
-      analytics_storage: 'granted',
-      personalization_storage: 'granted',
-      functionality_storage: 'granted',
-      security_storage: 'granted'
-    });
-    assertApi('gtmOnSuccess').wasCalled();
-- name: extra settings sent
-  code: |-
-    mock('gtagSet', (obj) => {
-      assertThat(obj.url_passthrough).isEqualTo(true);
-      assertThat(obj.ads_data_redaction).isEqualTo(true);
-    });
-    // Call runCode to run the template's code.
-    runCode(mockData);
-
-    // Verify that the tag finished successfully.
-    assertApi('gtmOnSuccess').wasCalled();
 - name: dataLayer events generated
   code: "mockData.sendDataLayer = true;\n\nlet dlCalled = 0;\n\nmock('createQueue',\
-    \ name => {\n  return o => {\n    require('logToConsole')(o);\n    if (o.event\
-    \ === 'gtm_consent_default' && o.ad_storage === 'granted' && o.analytics_storage\
+    \ name => {\n  return o => {\n    require('logToConsole')(o);\n    if (o.ad_storage === 'granted' && o.analytics_storage\
     \ === 'denied' && o.personalization_storage === 'denied') dlCalled++;\n    if\
-    \ (o.event === 'gtm_consent_default' && o.ad_storage === 'denied' && o.analytics_storage\
+    \ (o.ad_storage === 'denied' && o.analytics_storage\
     \ === 'granted' && o.personalization_storage === 'granted' && o.consent_region.join()\
     \ === 'ES,US-AK') dlCalled++;\n  };\n});\n    \n// Call runCode to run the template's\
     \ code.\nrunCode(mockData);\n\n// Verify that the tag finished successfully.\n\
@@ -989,8 +686,8 @@ scenarios:
     \ with correct arguments').isEqualTo(2);"
 setup: |-
   const mockData = {
-    command: 'default',
-    settingsTable: [{
+    settingsTable: [
+      {
       ad_storage: 'granted',
       analytics_storage: 'denied',
       personalization_storage: 'denied',
@@ -998,7 +695,8 @@ setup: |-
       security_storage: 'denied',
       wait_for_update: 500,
       regions: 'all'
-    },{
+      },
+      {
       ad_storage: 'denied',
       analytics_storage: 'granted',
       personalization_storage: 'granted',
@@ -1006,16 +704,13 @@ setup: |-
       security_storage: 'granted',
       wait_for_update: 1000,
       regions: 'ES, US-AK'
-    }],
+      }
+    ],
     update_analytics_storage: 'granted',
     update_ad_storage: 'denied',
     update_personalization_storage: 'granted',
     update_functionality_storage: 'granted',
     update_security_storage: 'granted',
-    url_passthrough: true,
-    ads_data_redaction: true,
-    sendDataLayer: false,
-    sendGtag: false
   };
 
 
