@@ -163,52 +163,58 @@ const log = require('logToConsole');
 const setDefaultConsentState = require('setDefaultConsentState');
 
 const injectScript = require('injectScript');
+const setInWindow = require('setInWindow');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const id = data.id;
 
-function after_inject() {
 
-  // Process default consent state
-  data.settingsTable.forEach(setting => {
-    const settingObject = {
-      ad_storage: setting.ad_storage,
-      ad_user_data: setting.ad_storage,
-      ad_personalization: setting.ad_storage,
-      analytics_storage: setting.analytics_storage,
-      personalization_storage: setting.customer_interaction,
-      functionality_storage: setting.customer_interaction,
-      security_storage: setting.customer_interaction,
-      wait_for_update: setting.wait_for_update
-    };
-    if (setting.regions !== 'all') {
-      settingObject.region = setting.regions.split(',').map(r => r.trim());
-    }
-    setDefaultConsentState(settingObject);
-  });
-
-  // push settings to the data layer
-  // dataLayerPush({
-  //   event: 'gtm_default_consent_settings',
-  //   settings: data.settingsTable
-  // });
-  
-  window.sp_gcm_initialised = true;
-
-  // Call data.gtmOnSuccess when the tag is finished.
-  log('secureprivacy.ai injected');
-  data.gtmOnSuccess();
-  return ;
+// Process default consent state
+data.settingsTable.forEach(setting => {
+const settingObject = {
+    ad_storage: setting.ad_storage,
+    ad_user_data: setting.ad_storage,
+    ad_personalization: setting.ad_storage,
+    analytics_storage: setting.analytics_storage,
+    personalization_storage: setting.customer_interaction,
+    functionality_storage: setting.customer_interaction,
+    security_storage: setting.customer_interaction,
+    wait_for_update: setting.wait_for_update
+};
+if (setting.regions !== 'all') {
+    settingObject.region = setting.regions.split(',').map(r => r.trim());
 }
+setDefaultConsentState(settingObject);
+});
+
+// push settings to the data layer
+// dataLayerPush({
+//   event: 'gtm_default_consent_settings',
+//   settings: data.settingsTable
+// });
+
 
 // let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
 if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl, after_inject, data.gtmOnFailure);
+  injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
 } else {
   data.gtmOnFailure();
 }
+
+
+if (queryPermission('access_globals')) {
+    setInWindow('sp_gcm_initialised', true);
+} else {
+    data.gtmOnFailure();
+}
+
+// Call data.gtmOnSuccess when the tag is finished.
+log('secureprivacy.ai injected');
+data.gtmOnSuccess();
+return ;
+
 
 ___WEB_PERMISSIONS___
 
