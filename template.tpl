@@ -52,7 +52,7 @@ ___TEMPLATE_PARAMETERS___
           {
             "param": {
               "type": "SELECT",
-              "name": "ad_storage (ad_storage, ad_user_data and ad_personalization)",
+              "name": "ad_storage",
               "displayName": "Advertising",
               "macrosInSelect": true,
               "selectItems": [
@@ -67,7 +67,7 @@ ___TEMPLATE_PARAMETERS___
               ],
               "simpleValueType": true,
               "defaultValue": "granted",
-              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e"
+              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e Setting (ad_storage, ad_user_data and ad_personalization)"
             },
             "isUnique": false
           },
@@ -75,7 +75,7 @@ ___TEMPLATE_PARAMETERS___
             "param": {
               "type": "SELECT",
               "name": "analytics_storage",
-              "displayName": "Analytics (analytics_storage)",
+              "displayName": "Analytics",
               "macrosInSelect": true,
               "selectItems": [
                 {
@@ -121,7 +121,7 @@ ___TEMPLATE_PARAMETERS___
               "displayName": "Wait for Update",
               "simpleValueType": true,
               "valueUnit": "milliseconds",
-              "defaultValue": 2000,
+              "defaultValue": 500,
               "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
             },
             "isUnique": false
@@ -162,59 +162,52 @@ const dataLayerPush = require('createQueue')('dataLayer');
 const log = require('logToConsole');
 const setDefaultConsentState = require('setDefaultConsentState');
 
+const gtagSet = require('gtagSet');
 const injectScript = require('injectScript');
 const setInWindow = require('setInWindow');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const id = data.id;
 
+function after_inject() {
 
-// Process default consent state
-data.settingsTable.forEach(setting => {
-const settingObject = {
-    ad_storage: setting.ad_storage,
-    ad_user_data: setting.ad_storage,
-    ad_personalization: setting.ad_storage,
-    analytics_storage: setting.analytics_storage,
-    personalization_storage: setting.customer_interaction,
-    functionality_storage: setting.customer_interaction,
-    security_storage: setting.customer_interaction,
-    wait_for_update: setting.wait_for_update
-};
-if (setting.regions !== 'all') {
-    settingObject.region = setting.regions.split(',').map(r => r.trim());
-}
-setDefaultConsentState(settingObject);
-});
+  const default_object = {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      functionality_storage: 'denied',
+      personalization_storage: 'denied',
+      security_storage: 'granted',
+      wait_for_update: '2000'
+    };
+  setDefaultConsentState(default_object);
 
-// push settings to the data layer
-// dataLayerPush({
-//   event: 'gtm_default_consent_settings',
-//   settings: data.settingsTable
-// });
+  // push settings to the data layer
+  dataLayerPush({
+    event: 'gtm_default_consent_settings',
+    settings: default_object
+  });
 
-
-// let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-
-if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
-} else {
-  data.gtmOnFailure();
-}
-
-
-if (queryPermission('access_globals')) {
-    setInWindow('sp_gcm_initialised', true);
+  if (queryPermission('access_globals')) {
+    setInWindow('sp_gcm_initialised', '1111', true);
 } else {
     data.gtmOnFailure();
 }
+  // Call data.gtmOnSuccess when the tag is finished.
+  log('secureprivacy.ai injected');
+  data.gtmOnSuccess();
+  return ;
+}
 
-// Call data.gtmOnSuccess when the tag is finished.
-log('secureprivacy.ai injected');
-data.gtmOnSuccess();
-return ;
+//let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
+if (queryPermission('inject_script', scriptUrl)) {
+  injectScript(scriptUrl, after_inject, data.gtmOnFailure);
+} else {
+  data.gtmOnFailure();
+}
 
 ___WEB_PERMISSIONS___
 
@@ -653,4 +646,5 @@ ___WEB_PERMISSIONS___
 ___NOTES___
 
 Created on 5/31/2023, 2:32:45 PM
+
 
