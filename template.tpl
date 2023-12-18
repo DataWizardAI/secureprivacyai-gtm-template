@@ -163,7 +163,7 @@ ___TEMPLATE_PARAMETERS___
               "displayName": "Wait for Update",
               "simpleValueType": true,
               "valueUnit": "milliseconds",
-              "defaultValue": 500,
+              "defaultValue": 20000,
               "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
             },
             "isUnique": false
@@ -207,14 +207,20 @@ const setDefaultConsentState = require('setDefaultConsentState');
 const injectScript = require('injectScript');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
+const createQueue = require('createQueue');
+const setInWindow = require('setInWindow');
 const id = data.id;
 
+
 function after_inject() {
+  const setting_arr = [];
 
   // Process default consent state
   data.settingsTable.forEach(setting => {
     const settingObject = {
       ad_storage: setting.ad_storage,
+      ad_user_data: setting.ad_storage,
+      ad_personalization: setting.ad_storage,
       analytics_storage: setting.analytics_storage,
       personalization_storage: setting.personalization_storage,
       functionality_storage: setting.functionality_storage,
@@ -224,17 +230,20 @@ function after_inject() {
     if (setting.regions !== 'all') {
       settingObject.region = setting.regions.split(',').map(r => r.trim());
     }
+    setting_arr.push(settingObject);
     setDefaultConsentState(settingObject);
   });
 
   // push settings to the data layer
   dataLayerPush({
     event: 'gtm_default_consent_settings',
-    settings: data.settingsTable
+    settings: setting_arr
   });
 
   // Call data.gtmOnSuccess when the tag is finished.
   log('secureprivacy.ai injected');
+  log('Uptading the window.sp_gcm_initialised');
+  setInWindow('sp_gcm_initialised', true);
   data.gtmOnSuccess();
   return ;
 }
@@ -387,6 +396,45 @@ ___WEB_PERMISSIONS___
                     "boolean": false
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "sp_gcm_initialised"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
               }
             ]
           }
@@ -430,6 +478,68 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "ad_storage"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+            {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_user_data"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  }
+                ]
+              },
+            {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "consentType"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "ad_personalization"
                   },
                   {
                     "type": 8,
