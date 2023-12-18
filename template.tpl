@@ -1,4 +1,4 @@
-___TERMS_OF_SERVICE___
+﻿___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -67,7 +67,7 @@ ___TEMPLATE_PARAMETERS___
               ],
               "simpleValueType": true,
               "defaultValue": "granted",
-              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e Setting (ad_storage, ad_user_data and ad_personalization)"
+              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e"
             },
             "isUnique": false
           },
@@ -96,8 +96,50 @@ ___TEMPLATE_PARAMETERS___
           {
             "param": {
               "type": "SELECT",
-              "name": "customer_interaction",
-              "displayName": "Customer Interaction (functionality_storage, personalization_storage and security_storage)",
+              "name": "personalization_storage",
+              "displayName": "Personalization",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "value": "granted",
+                  "displayValue": "granted"
+                },
+                {
+                  "value": "denied",
+                  "displayValue": "denied"
+                }
+              ],
+              "simpleValueType": true,
+              "defaultValue": "granted"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "functionality_storage",
+              "displayName": "Functionality",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "value": "granted",
+                  "displayValue": "granted"
+                },
+                {
+                  "value": "denied",
+                  "displayValue": "denied"
+                }
+              ],
+              "simpleValueType": true,
+              "defaultValue": "granted"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "security_storage",
+              "displayName": "Security",
               "macrosInSelect": true,
               "selectItems": [
                 {
@@ -121,7 +163,7 @@ ___TEMPLATE_PARAMETERS___
               "displayName": "Wait for Update",
               "simpleValueType": true,
               "valueUnit": "milliseconds",
-              "defaultValue": 500,
+              "defaultValue": 20000,
               "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
             },
             "isUnique": false
@@ -162,46 +204,52 @@ const dataLayerPush = require('createQueue')('dataLayer');
 const log = require('logToConsole');
 const setDefaultConsentState = require('setDefaultConsentState');
 
-const gtagSet = require('gtagSet');
 const injectScript = require('injectScript');
-const setInWindow = require('setInWindow');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
+const createQueue = require('createQueue');
+const setInWindow = require('setInWindow');
 const id = data.id;
 
-function after_inject() {
 
-  const default_object = {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-      functionality_storage: 'denied',
-      personalization_storage: 'denied',
-      security_storage: 'granted',
-      wait_for_update: '2000'
+function after_inject() {
+  const setting_arr = [];
+
+  // Process default consent state
+  data.settingsTable.forEach(setting => {
+    const settingObject = {
+      ad_storage: setting.ad_storage,
+      ad_user_data: setting.ad_storage,
+      ad_personalization: setting.ad_storage,
+      analytics_storage: setting.analytics_storage,
+      personalization_storage: setting.personalization_storage,
+      functionality_storage: setting.functionality_storage,
+      security_storage: setting.security_storage,
+      wait_for_update: setting.wait_for_update
     };
-  setDefaultConsentState(default_object);
+    if (setting.regions !== 'all') {
+      settingObject.region = setting.regions.split(',').map(r => r.trim());
+    }
+    setting_arr.push(settingObject);
+    setDefaultConsentState(settingObject);
+  });
 
   // push settings to the data layer
   dataLayerPush({
     event: 'gtm_default_consent_settings',
-    settings: default_object
+    settings: setting_arr
   });
 
-  if (queryPermission('access_globals')) {
-    setInWindow('sp_gcm_initialised', '1111', true);
-} else {
-    data.gtmOnFailure();
-}
   // Call data.gtmOnSuccess when the tag is finished.
   log('secureprivacy.ai injected');
+  log('Uptading the window.sp_gcm_initialised');
+  setInWindow('sp_gcm_initialised', true);
   data.gtmOnSuccess();
   return ;
 }
 
-//let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+//let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
 if (queryPermission('inject_script', scriptUrl)) {
   injectScript(scriptUrl, after_inject, data.gtmOnFailure);
@@ -348,6 +396,45 @@ ___WEB_PERMISSIONS___
                     "boolean": false
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "sp_gcm_initialised"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
               }
             ]
           }
@@ -402,7 +489,7 @@ ___WEB_PERMISSIONS___
                   }
                 ]
               },
-              {
+            {
                 "type": 3,
                 "mapKey": [
                   {
@@ -433,7 +520,7 @@ ___WEB_PERMISSIONS___
                   }
                 ]
               },
-                  {
+            {
                 "type": 3,
                 "mapKey": [
                   {
@@ -642,6 +729,100 @@ ___WEB_PERMISSIONS___
     "isRequired": true
   }
 ]
+
+
+___TESTS___
+
+scenarios:
+- name: default settings sent
+  code: |-
+    let index = 1;
+    mock('createArgumentsQueue', () => {
+      return function() {
+        if (arguments[0] === 'consent' && index === 1) {
+          assertThat(arguments[2]).isEqualTo({
+            ad_storage: 'granted',
+            analytics_storage: 'denied',
+            personalization_storage: 'denied',
+            functionality_storage: 'denied',
+            security_storage: 'denied',
+            wait_for_update: 500
+          });
+          index++;
+        } else if (arguments[0] === 'consent' && index === 2) {
+          assertThat(arguments[2]).isEqualTo({
+            ad_storage: 'denied',
+            analytics_storage: 'granted',
+            personalization_storage: 'granted',
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            wait_for_update: 1000,
+            region: ['ES', 'US-AK']
+          });
+        }
+      };
+    });
+    // Call runCode to run the template's code.
+    runCode(mockData);
+
+    // Verify that the tag finished successfully.
+    assertApi('setDefaultConsentState').wasCalledWith({
+      ad_storage: 'granted',
+      analytics_storage: 'denied',
+      personalization_storage: 'denied',
+      functionality_storage: 'denied',
+      security_storage: 'denied',
+      wait_for_update: 500
+    });
+    assertApi('setDefaultConsentState').wasCalledWith({
+      ad_storage: 'denied',
+      analytics_storage: 'granted',
+      personalization_storage: 'granted',
+      functionality_storage: 'granted',
+      security_storage: 'granted',
+      region: ['ES', 'US-AK'],
+      wait_for_update: 1000
+    });
+    assertApi('gtmOnSuccess').wasCalled();
+- name: dataLayer events generated
+  code: "mockData.sendDataLayer = true;\n\nlet dlCalled = 0;\n\nmock('createQueue',\
+    \ name => {\n  return o => {\n    require('logToConsole')(o);\n    if (o.ad_storage === 'granted' && o.analytics_storage\
+    \ === 'denied' && o.personalization_storage === 'denied') dlCalled++;\n    if\
+    \ (o.ad_storage === 'denied' && o.analytics_storage\
+    \ === 'granted' && o.personalization_storage === 'granted' && o.consent_region.join()\
+    \ === 'ES,US-AK') dlCalled++;\n  };\n});\n    \n// Call runCode to run the template's\
+    \ code.\nrunCode(mockData);\n\n// Verify that the tag finished successfully.\n\
+    assertApi('gtmOnSuccess').wasCalled();\nassertThat(dlCalled, 'dataLayer not called\
+    \ with correct arguments').isEqualTo(2);"
+setup: |-
+  const mockData = {
+    settingsTable: [
+      {
+      ad_storage: 'granted',
+      analytics_storage: 'denied',
+      personalization_storage: 'denied',
+      functionality_storage: 'denied',
+      security_storage: 'denied',
+      wait_for_update: 500,
+      regions: 'all'
+      },
+      {
+      ad_storage: 'denied',
+      analytics_storage: 'granted',
+      personalization_storage: 'granted',
+      functionality_storage: 'granted',
+      security_storage: 'granted',
+      wait_for_update: 1000,
+      regions: 'ES, US-AK'
+      }
+    ],
+    update_analytics_storage: 'granted',
+    update_ad_storage: 'denied',
+    update_personalization_storage: 'granted',
+    update_functionality_storage: 'granted',
+    update_security_storage: 'granted',
+  };
+
 
 ___NOTES___
 
