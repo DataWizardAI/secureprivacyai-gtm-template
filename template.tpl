@@ -200,19 +200,20 @@ ___TEMPLATE_PARAMETERS___
     "name": "adsDataRedaction",
     "checkboxText": "Redact ads data",
     "simpleValueType": true,
-    "help" : "When ad data redaction is true and advertising cookies are denied, ad click identifiers sent in network requests by Google Ads and Floodlight tags will be redacted. Network requests will also be sent through a cookieless domain"
+    "help": "When ad data redaction is true and advertising cookies are denied, ad click identifiers sent in network requests by Google Ads and Floodlight tags will be redacted. Network requests will also be sent through a cookieless domain"
   },
   {
     "type": "CHECKBOX",
     "name": "urlPassthrough",
     "checkboxText": "Enable URL passthrough",
     "simpleValueType": true,
-    "help" : "When using URL passthrough, a few query parameters may be appended to links as users navigate through pages on your website"
-  },
+    "help": "When using URL passthrough, a few query parameters may be appended to links as users navigate through pages on your website"
+  }
 ]
 
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
+
 const createQueue = require('createQueue');
 const dataLayerPush = createQueue('dataLayer');
 const log = require('logToConsole');
@@ -250,15 +251,12 @@ data.settingsTable.forEach(setting => {
 
 });
 
-// Set url_passthrough 
-gtagSet({
-  'url_passthrough': urlPassthrough
-});
+// Set url_passthrough and redaction
+log('adsDataRedaction', adsDataRedaction);
+gtagSet('ads_data_redaction', adsDataRedaction);
 
-// Set data redaction
-gtagSet({
-  'ads_data_redaction': adsDataRedaction
-});
+log('urlPassthrough', urlPassthrough);
+gtagSet('url_passthrough', urlPassthrough);
 
 setInWindow('sp_gcm_initialised', true);
 
@@ -273,6 +271,7 @@ if (queryPermission('inject_script', scriptUrl)) {
 
 // Call data.gtmOnSuccess when the tag is finished.
 data.gtmOnSuccess();
+
 
 ___WEB_PERMISSIONS___
 
@@ -506,7 +505,7 @@ ___WEB_PERMISSIONS___
                   }
                 ]
               },
-            {
+              {
                 "type": 3,
                 "mapKey": [
                   {
@@ -537,7 +536,7 @@ ___WEB_PERMISSIONS___
                   }
                 ]
               },
-            {
+              {
                 "type": 3,
                 "mapKey": [
                   {
@@ -738,7 +737,25 @@ ___WEB_PERMISSIONS___
       "key": {
         "publicId": "write_data_layer",
         "versionId": "1"
-      }
+      },
+      "param": [
+        {
+          "key": "keyPatterns",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "ads_data_redaction"
+              },
+              {
+                "type": 1,
+                "string": "url_passthrough"
+              }
+            ]
+          }
+        }
+      ]
     },
     "clientAnnotations": {
       "isEditedByUser": true
@@ -803,9 +820,9 @@ scenarios:
     assertApi('gtmOnSuccess').wasCalled();
 - name: dataLayer events generated
   code: "mockData.sendDataLayer = true;\n\nlet dlCalled = 0;\n\nmock('createQueue',\
-    \ name => {\n  return o => {\n    require('logToConsole')(o);\n    if (o.ad_storage === 'granted' && o.analytics_storage\
-    \ === 'denied' && o.personalization_storage === 'denied') dlCalled++;\n    if\
-    \ (o.ad_storage === 'denied' && o.analytics_storage\
+    \ name => {\n  return o => {\n    require('logToConsole')(o);\n    if (o.ad_storage\
+    \ === 'granted' && o.analytics_storage === 'denied' && o.personalization_storage\
+    \ === 'denied') dlCalled++;\n    if (o.ad_storage === 'denied' && o.analytics_storage\
     \ === 'granted' && o.personalization_storage === 'granted' && o.consent_region.join()\
     \ === 'ES,US-AK') dlCalled++;\n  };\n});\n    \n// Call runCode to run the template's\
     \ code.\nrunCode(mockData);\n\n// Verify that the tag finished successfully.\n\
@@ -844,3 +861,5 @@ setup: |-
 ___NOTES___
 
 Created on 5/31/2023, 2:32:45 PM
+
+
