@@ -1,4 +1,4 @@
-﻿___TERMS_OF_SERVICE___
+___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -194,7 +194,21 @@ ___TEMPLATE_PARAMETERS___
         ]
       }
     ]
-  }
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "adsDataRedaction",
+    "checkboxText": "Redact ads data",
+    "simpleValueType": true,
+    "help" : "When ad data redaction is true and advertising cookies are denied, ad click identifiers sent in network requests by Google Ads and Floodlight tags will be redacted. Network requests will also be sent through a cookieless domain"
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "urlPassthrough",
+    "checkboxText": "Enable URL passthrough",
+    "simpleValueType": true,
+    "help" : "When using URL passthrough, a few query parameters may be appended to links as users navigate through pages on your website"
+  },
 ]
 
 
@@ -207,8 +221,13 @@ const injectScript = require('injectScript');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
 const setInWindow = require('setInWindow');
+const gtagSet = require('gtagSet');
+
 const id = data.id;
 const setting_arr = [];
+
+const urlPassthrough = data.urlPassthrough;
+const adsDataRedaction = data.adsDataRedaction;
 
 // Process default consent state
 data.settingsTable.forEach(setting => {
@@ -229,6 +248,16 @@ data.settingsTable.forEach(setting => {
   setting_arr.push(settingObject);
   setDefaultConsentState(settingObject);
 
+});
+
+// Set url_passthrough 
+gtagSet({
+  'url_passthrough': urlPassthrough
+});
+
+// Set data redaction
+gtagSet({
+  'ads_data_redaction': adsDataRedaction
 });
 
 setInWindow('sp_gcm_initialised', true);
@@ -815,5 +844,3 @@ setup: |-
 ___NOTES___
 
 Created on 5/31/2023, 2:32:45 PM
-
-
