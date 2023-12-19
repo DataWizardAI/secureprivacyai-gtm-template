@@ -233,8 +233,8 @@ data.settingsTable.forEach(setting => {
 
 setInWindow('sp_gcm_initialised', true);
 
-let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
-//let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+//let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
 if (queryPermission('inject_script', scriptUrl)) {
   injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
