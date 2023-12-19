@@ -199,63 +199,51 @@ ___TEMPLATE_PARAMETERS___
 
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
-
-const dataLayerPush = require('createQueue')('dataLayer');
+const createQueue = require('createQueue');
+const dataLayerPush = createQueue('dataLayer');
 const log = require('logToConsole');
 const setDefaultConsentState = require('setDefaultConsentState');
-
 const injectScript = require('injectScript');
 const encodeUriComponent = require('encodeUriComponent');
 const queryPermission = require('queryPermission');
-const createQueue = require('createQueue');
 const setInWindow = require('setInWindow');
 const id = data.id;
+const setting_arr = [];
 
+// Process default consent state
+data.settingsTable.forEach(setting => {
+  log('Inside setting loop', setting);
+  const settingObject = {
+    ad_storage: setting.ad_storage,
+    ad_user_data: setting.ad_storage,
+    ad_personalization: setting.ad_storage,
+    analytics_storage: setting.analytics_storage,
+    personalization_storage: setting.personalization_storage,
+    functionality_storage: setting.functionality_storage,
+    security_storage: setting.security_storage,
+    wait_for_update: setting.wait_for_update
+  };
+  if (setting.regions !== 'all') {
+    settingObject.region = setting.regions.split(',').map(r => r.trim());
+  }
+  setting_arr.push(settingObject);
+  setDefaultConsentState(settingObject);
 
-function after_inject() {
-  const setting_arr = [];
+});
 
-  // Process default consent state
-  data.settingsTable.forEach(setting => {
-    const settingObject = {
-      ad_storage: setting.ad_storage,
-      ad_user_data: setting.ad_storage,
-      ad_personalization: setting.ad_storage,
-      analytics_storage: setting.analytics_storage,
-      personalization_storage: setting.personalization_storage,
-      functionality_storage: setting.functionality_storage,
-      security_storage: setting.security_storage,
-      wait_for_update: setting.wait_for_update
-    };
-    if (setting.regions !== 'all') {
-      settingObject.region = setting.regions.split(',').map(r => r.trim());
-    }
-    setting_arr.push(settingObject);
-    setDefaultConsentState(settingObject);
-  });
-
-  // push settings to the data layer
-  dataLayerPush({
-    event: 'gtm_default_consent_settings',
-    settings: setting_arr
-  });
-
-  // Call data.gtmOnSuccess when the tag is finished.
-  log('secureprivacy.ai injected');
-  log('Uptading the window.sp_gcm_initialised');
-  setInWindow('sp_gcm_initialised', true);
-  data.gtmOnSuccess();
-  return ;
-}
+setInWindow('sp_gcm_initialised', true);
 
 let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 //let scriptUrl = 'https://frontend-test.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
 
 if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl, after_inject, data.gtmOnFailure);
+  injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
 } else {
   data.gtmOnFailure();
 }
+
+// Call data.gtmOnSuccess when the tag is finished.
+data.gtmOnSuccess();
 
 ___WEB_PERMISSIONS___
 
