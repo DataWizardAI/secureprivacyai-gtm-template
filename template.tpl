@@ -74,6 +74,48 @@ ___TEMPLATE_PARAMETERS___
           {
             "param": {
               "type": "SELECT",
+              "name": "ad_user_data",
+              "displayName": "Ad user data",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "value": "granted",
+                  "displayValue": "granted"
+                },
+                {
+                  "value": "denied",
+                  "displayValue": "denied"
+                }
+              ],
+              "simpleValueType": true,
+              "defaultValue": "granted",
+            },
+            "isUnique": false
+          },
+           {
+            "param": {
+              "type": "SELECT",
+              "name": "ad_personalization",
+              "displayName": "Ad personalization",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "value": "granted",
+                  "displayValue": "granted"
+                },
+                {
+                  "value": "denied",
+                  "displayValue": "denied"
+                }
+              ],
+              "simpleValueType": true,
+              "defaultValue": "granted",
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
               "name": "analytics_storage",
               "displayName": "Analytics",
               "macrosInSelect": true,
@@ -163,7 +205,7 @@ ___TEMPLATE_PARAMETERS___
               "displayName": "Wait for Update",
               "simpleValueType": true,
               "valueUnit": "milliseconds",
-              "defaultValue": 20000,
+              "defaultValue": 2000,
               "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
             },
             "isUnique": false
@@ -235,8 +277,8 @@ data.settingsTable.forEach(setting => {
   log('Inside setting loop', setting);
   const settingObject = {
     ad_storage: setting.ad_storage,
-    ad_user_data: setting.ad_storage,
-    ad_personalization: setting.ad_storage,
+    ad_user_data: setting.ad_user_data,
+    ad_personalization: setting.ad_personalization,
     analytics_storage: setting.analytics_storage,
     personalization_storage: setting.personalization_storage,
     functionality_storage: setting.functionality_storage,
