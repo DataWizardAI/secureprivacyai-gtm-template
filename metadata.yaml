@@ -2,9 +2,11 @@ homepage: "https://secureprivacy.ai/"
 documentation: "https://support.secureprivacy.ai/support/solutions/articles/80000874877-how-to-install-secure-privacy-with-google-tag-manager-gtm-"
 versions:
   # Latest version
+  - sha: b9cccae769ce94a712a9c7e0753d7b94e6ba34f9
+    changeNotes: Source Link Updated
+  # Older versions
   - sha: 146946628557d652db91796bade0a4db25ead73e
     changeNotes: url_passthrough added
-    # Older versions
   - sha: 3588e56391c1f75750a69de02169020e2264363e
     changeNotes: Updated the Structure
   - sha: 6a987f8862cc5e7871e3ce73efa2b6d1bd4f5898
