@@ -1,5 +1,5 @@
 homepage: "https://secureprivacy.ai/"
-documentation: "https://support.secureprivacy.ai/support/solutions/articles/80000874877-how-to-install-secure-privacy-with-google-tag-manager-gtm-"
+documentation: "https://support.secureprivacy.ai/articles/235297-implementation-google-consent-mode-using-google-tag-manager-template"
 versions:
   # Latest version
   - sha: b9cccae769ce94a712a9c7e0753d7b94e6ba34f9
