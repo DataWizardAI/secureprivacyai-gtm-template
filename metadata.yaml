@@ -2,9 +2,11 @@ homepage: "https://secureprivacy.ai/"
 documentation: "https://support.secureprivacy.ai/articles/235297-implementation-google-consent-mode-using-google-tag-manager-template"
 versions:
   # Latest version
+  - sha: 080cd5d7f388a49252fd203847f7852b79fc91ec
+    changeNotes: documentation link updated
+  # Older versions
   - sha: b9cccae769ce94a712a9c7e0753d7b94e6ba34f9
     changeNotes: Source Link Updated
-  # Older versions
   - sha: 146946628557d652db91796bade0a4db25ead73e
     changeNotes: url_passthrough added
   - sha: 3588e56391c1f75750a69de02169020e2264363e
