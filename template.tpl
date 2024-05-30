@@ -300,6 +300,8 @@ gtagSet('ads_data_redaction', adsDataRedaction);
 log('urlPassthrough', urlPassthrough);
 gtagSet('url_passthrough', urlPassthrough);
 
+ gtagSet('developer_id.dNmNhOT', true);
+
 setInWindow('sp_gcm_initialised', true);
 
 let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
