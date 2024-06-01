@@ -40,6 +40,7 @@ author:
    ```  
    ![image](./attachments/2024-06-01_14-54_1.png)  
 
-
-__Note__: If you pushed the changes you can see the __git sha id__ (which used on [medatada.yaml](../metadata.yaml) ) on github commits page as well like this:  
-![image](./attachments/2024-06-01_15-45.png)  
+---
+> __Note__: If you pushed the changes you can see the __git sha id__ (which used on [medatada.yaml](../metadata.yaml) ) on github commits page as well  
+> like this:  
+> ![image](./attachments/2024-06-01_15-45.png)  
