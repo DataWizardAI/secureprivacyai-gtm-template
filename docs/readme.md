@@ -22,7 +22,7 @@ author:
     ```  
     ![image](./attachments/2024-06-01_14-48.png)  
 4. Open the [metadata.yaml](../metadata.yaml)  
-5. Insert 2 new lines __top of the sha part__, your new sha is lates commit id  
+5. Insert 2 new lines __top of the sha part__, your new **sha** is **latest commit id**  
     ```yml
     - sha: <LAST_COMMIT_ID>
       changeNotes: default wait_time parameter update
