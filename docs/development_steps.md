@@ -1,3 +1,14 @@
+---
+date created: 2024-06-01 12:03
+date updated: 2024-06-01 12:05
+title: Development Steps
+tags:
+  - docs
+author:
+  - name: m-karakus
+    url: https://github.com/m-karakus
+---
+
 # Development Steps
 
 1. Do the changes on the template files.  
@@ -21,7 +32,10 @@
     ```bash
     git add . && git commit -m 'feat: Docs Update'
     ```  
+    ![image](./attachments/2024-06-01_14-54.png)  
 7. Push your changes to the GitHub  
    ```bash
    git push
    ```  
+   ![image](./attachments/2024-06-01_14-54_1.png)  
+
