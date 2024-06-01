@@ -1,4 +1,4 @@
-___TERMS_OF_SERVICE___
+﻿___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -34,222 +34,224 @@ ___TEMPLATE_PARAMETERS___
 
 [
   {
-    "type": "TEXT",
-    "name": "id",
     "displayName": "ID",
-    "simpleValueType": true
+    "simpleValueType": true,
+    "name": "id",
+    "type": "TEXT"
   },
   {
-    "type": "GROUP",
-    "name": "defaultSettings",
     "displayName": "Consent Settings",
+    "name": "defaultSettings",
     "groupStyle": "NO_ZIPPY",
+    "type": "GROUP",
     "subParams": [
       {
-        "type": "PARAM_TABLE",
+        "valueValidators": [
+          {
+            "args": [
+              1
+            ],
+            "errorMessage": "You must add at least one default setting.",
+            "type": "TABLE_ROW_COUNT"
+          }
+        ],
         "name": "settingsTable",
         "paramTableColumns": [
           {
             "param": {
-              "type": "SELECT",
-              "name": "ad_storage",
+              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Advertising",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
-              "simpleValueType": true,
               "defaultValue": "granted",
-              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google\u0027s advertising tags and pixels will not be able to read or write first-party cookies. The use of third-party cookies is limited to only spam and fraud detection purposes. \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e"
+              "simpleValueType": true,
+              "name": "ad_storage",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "SELECT",
-              "name": "ad_user_data",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Ad user data",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
-              "simpleValueType": true,
               "defaultValue": "granted",
+              "simpleValueType": true,
+              "name": "ad_user_data",
+              "type": "SELECT"
             },
             "isUnique": false
           },
-           {
+          {
             "param": {
-              "type": "SELECT",
-              "name": "ad_personalization",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Ad personalization",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
-              "simpleValueType": true,
               "defaultValue": "granted",
+              "simpleValueType": true,
+              "name": "ad_personalization",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "SELECT",
-              "name": "analytics_storage",
+              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google Analytics tags will not read or write the first-party cookie, and data collected to Google Analytics will not utilize persistent cookie identifiers (the identifiers are reset with every page load). \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e.",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Analytics",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
-              "simpleValueType": true,
               "defaultValue": "granted",
-              "help": "If set to \u003cstrong\u003edenied\u003c/strong\u003e, Google Analytics tags will not read or write the first-party cookie, and data collected to Google Analytics will not utilize persistent cookie identifiers (the identifiers are reset with every page load). \u003ca href\u003d\"https://support.google.com/analytics/answer/9976101#behavior\"\u003eMore information\u003c/a\u003e."
+              "simpleValueType": true,
+              "name": "analytics_storage",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "SELECT",
-              "name": "personalization_storage",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Personalization",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
+              "defaultValue": "granted",
               "simpleValueType": true,
-              "defaultValue": "granted"
+              "name": "personalization_storage",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "SELECT",
-              "name": "functionality_storage",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Functionality",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
+              "defaultValue": "granted",
               "simpleValueType": true,
-              "defaultValue": "granted"
+              "name": "functionality_storage",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "SELECT",
-              "name": "security_storage",
+              "macrosInSelect": true,
+              "selectItems": [
+                {
+                  "displayValue": "granted",
+                  "value": "granted"
+                },
+                {
+                  "displayValue": "denied",
+                  "value": "denied"
+                }
+              ],
               "displayName": "Security",
-              "macrosInSelect": true,
-              "selectItems": [
-                {
-                  "value": "granted",
-                  "displayValue": "granted"
-                },
-                {
-                  "value": "denied",
-                  "displayValue": "denied"
-                }
-              ],
+              "defaultValue": "granted",
               "simpleValueType": true,
-              "defaultValue": "granted"
+              "name": "security_storage",
+              "type": "SELECT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "TEXT",
-              "name": "wait_for_update",
+              "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up.",
               "displayName": "Wait for Update",
-              "simpleValueType": true,
-              "valueUnit": "milliseconds",
               "defaultValue": 500,
-              "help": "How long to wait (in milliseconds) for an \u003cstrong\u003eUpdate\u003c/strong\u003e command before firing Google tags that have been queued up."
+              "simpleValueType": true,
+              "name": "wait_for_update",
+              "valueUnit": "milliseconds",
+              "type": "TEXT"
             },
             "isUnique": false
           },
           {
             "param": {
-              "type": "TEXT",
-              "name": "regions",
+              "help": "Apply this setting to users from these \u003ca href\u003d\"https://en.wikipedia.org/wiki/ISO_3166-2\"\u003eregions\u003c/a\u003e (provide a comma-separated list). If you select \u003cstrong\u003eall\u003c/strong\u003e, the setting will apply to all users.",
               "displayName": "Regions",
-              "simpleValueType": true,
               "defaultValue": "all",
-              "help": "Apply this setting to users from these \u003ca href\u003d\"https://en.wikipedia.org/wiki/ISO_3166-2\"\u003eregions\u003c/a\u003e (provide a comma-separated list). If you select \u003cstrong\u003eall\u003c/strong\u003e, the setting will apply to all users."
+              "simpleValueType": true,
+              "name": "regions",
+              "type": "TEXT"
             },
             "isUnique": false
           }
         ],
-        "newRowButtonText": "Add Setting",
         "editRowTitle": "Edit Setting",
-        "newRowTitle": "Add Setting",
-        "valueValidators": [
-          {
-            "type": "TABLE_ROW_COUNT",
-            "args": [
-              1
-            ],
-            "errorMessage": "You must add at least one default setting."
-          }
-        ]
+        "type": "PARAM_TABLE",
+        "newRowButtonText": "Add Setting",
+        "newRowTitle": "Add Setting"
       }
     ]
   },
   {
-    "type": "CHECKBOX",
+    "help": "When ad data redaction is true and advertising cookies are denied, ad click identifiers sent in network requests by Google Ads and Floodlight tags will be redacted. Network requests will also be sent through a cookieless domain",
+    "simpleValueType": true,
     "name": "adsDataRedaction",
     "checkboxText": "Redact ads data",
-    "simpleValueType": true,
-    "help": "When ad data redaction is true and advertising cookies are denied, ad click identifiers sent in network requests by Google Ads and Floodlight tags will be redacted. Network requests will also be sent through a cookieless domain"
+    "type": "CHECKBOX",
+    "defaultValue": true
   },
   {
-    "type": "CHECKBOX",
+    "help": "When using URL passthrough, a few query parameters may be appended to links as users navigate through pages on your website",
+    "simpleValueType": true,
     "name": "urlPassthrough",
     "checkboxText": "Enable URL passthrough",
-    "simpleValueType": true,
-    "help": "When using URL passthrough, a few query parameters may be appended to links as users navigate through pages on your website"
+    "type": "CHECKBOX",
+    "defaultValue": true
   }
 ]
 
