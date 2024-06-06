@@ -302,7 +302,7 @@ gtagSet('ads_data_redaction', adsDataRedaction);
 log('urlPassthrough', urlPassthrough);
 gtagSet('url_passthrough', urlPassthrough);
 
- gtagSet('developer_id.dNmNhOT', true);
+gtagSet('developer_id.dNmNhOT', true);
 
 setInWindow('sp_gcm_initialised', true);
 
@@ -796,6 +796,10 @@ ___WEB_PERMISSIONS___
               {
                 "type": 1,
                 "string": "url_passthrough"
+              },
+              {
+                "type": 1,
+                "string": "developer_id.dNmNhOT"
               }
             ]
           }
