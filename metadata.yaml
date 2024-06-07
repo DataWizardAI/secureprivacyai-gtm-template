@@ -3,7 +3,7 @@ documentation: "https://support.secureprivacy.ai/articles/235297-implementation-
 versions:
   # Latest version
   - sha: 8f4d5e4198e8776a20590063f124a85c090b6a56
-    changeNotes: "Bug fixes"
+    changeNotes: Bug fixes
   # Older versions
   - sha: 5a726c8d28416f8775dacb340580a8449f397a82
     changeNotes: thumbnail update
