@@ -252,6 +252,14 @@ ___TEMPLATE_PARAMETERS___
     "checkboxText": "Enable URL passthrough",
     "type": "CHECKBOX",
     "defaultValue": true
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "isUsingIabTcf",
+    "checkboxText": "IAB TCF enabled",
+    "simpleValueType": true,
+    "help": "If you are using IAB TCF then check this box to ensure the template loads correctly",
+    "defaultValue": false
   }
 ]
 
@@ -273,6 +281,11 @@ const setting_arr = [];
 
 const urlPassthrough = data.urlPassthrough;
 const adsDataRedaction = data.adsDataRedaction;
+const isUsingIabTcf = data.isUsingIabTcf;
+
+function spGtag() {
+  dataLayerPush(arguments);
+}
 
 // Process default consent state
 data.settingsTable.forEach(setting => {
@@ -292,24 +305,39 @@ data.settingsTable.forEach(setting => {
   }
   setting_arr.push(settingObject);
   setDefaultConsentState(settingObject);
-
+  spGtag('consent', 'default', settingObject);
 });
 
 // Set url_passthrough and redaction
 log('adsDataRedaction', adsDataRedaction);
 gtagSet('ads_data_redaction', adsDataRedaction);
+spGtag('set', 'ads_data_redaction', adsDataRedaction);
 
 log('urlPassthrough', urlPassthrough);
 gtagSet('url_passthrough', urlPassthrough);
+spGtag('set', 'url_passthrough', urlPassthrough);
 
+log('developer_id.dNmNhOT', true);
 gtagSet('developer_id.dNmNhOT', true);
+spGtag('set', 'developer_id.dNmNhOT', true);
 
 setInWindow('sp_gcm_initialised', true);
 
-let scriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+if (isUsingIabTcf){
+  let tcfCmpStubScriptUrl = 'https://app.secureprivacy.ai/cmpstub.js';
+  if (queryPermission('inject_script', tcfCmpStubScriptUrl)) {
+    injectScript(tcfCmpStubScriptUrl, null, data.gtmOnFailure);
+    spGtag({ event: "tcf stub loaded" });
+    setInWindow('sp_iab_initialised', true);
+  } else {
+    data.gtmOnFailure();
+  }
+}
 
-if (queryPermission('inject_script', scriptUrl)) {
-  injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
+let blockingScriptUrl = 'https://app.secureprivacy.ai/script/' + encodeUriComponent(id) + '.js';
+
+if (queryPermission('inject_script', blockingScriptUrl)) {
+  injectScript(blockingScriptUrl, data.gtmOnSuccess, data.gtmOnFailure);
 } else {
   data.gtmOnFailure();
 }
@@ -482,6 +510,45 @@ ___WEB_PERMISSIONS___
                   {
                     "type": 1,
                     "string": "sp_gcm_initialised"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "sp_iab_initialised"
                   },
                   {
                     "type": 8,
